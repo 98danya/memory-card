@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import "./App.css";
 import CardGrid from "./components/CardGrid";
 import Scoreboard from "./components/Scoreboard";
+import Modal from "./components/Modal";
 
 const customImages = {
   "2baf70d1-42bb-4437-b551-e5fed5a87abe": "src/assets/ghibli-films/castle-in-the-sky.jpg",
@@ -29,6 +30,8 @@ function App() {
   const [score, setScore] = useState(0);
   const [bestScore, setBestScore] = useState(0);
   const [selectedCards, setSelectedCards] = useState([]);
+  const [modalMessage, setModalMessage] = useState("");
+  const [isRulesOpen, setIsRulesOpen] = useState(false);
 
   useEffect(() => {
     fetch("https://ghibliapi.vercel.app/films")
@@ -44,7 +47,7 @@ function App() {
             image: customImages[film.id] || film.movie_banner || "https://via.placeholder.com/300",
           }));
 
-        setCards(shuffleArray(filteredFilms));
+        setCards(shuffleArray([...new Set(filteredFilms)]));
       })
       .catch((error) => console.error("Error fetching data:", error));
   }, []);
@@ -55,6 +58,7 @@ function App() {
 
   function handleCardClick(id) {
     if (selectedCards.includes(id)) {
+      setModalMessage("Game Over! Try Again.");
       setScore(0);
       setSelectedCards([]);
     } else {
@@ -62,6 +66,10 @@ function App() {
       setScore(newScore);
       setBestScore(Math.max(newScore, bestScore));
       setSelectedCards([...selectedCards, id]);
+
+      if (newScore === Object.keys(customImages).length) {
+        setModalMessage("You Won!");
+      }
     }
     setCards(shuffleArray(cards));
   }
@@ -69,14 +77,18 @@ function App() {
   return (
     <div>
       <h1>Ghibli Film Memory Game</h1>
-      <div>
+      <button onClick={() => setIsRulesOpen(true)}>Rules</button>
       <Scoreboard score={score} bestScore={bestScore} />
       <CardGrid cards={cards} handleCardClick={handleCardClick} />
-      </div>
+      {modalMessage && <Modal message={modalMessage} onClose={() => setModalMessage("")} />}
+      {isRulesOpen && (
+        <Modal
+          message="Click on a movie only once! Try to remember which ones you've already selected."
+          onClose={() => setIsRulesOpen(false)}
+        />
+      )}
     </div>
   );
 }
-
-
 
 export default App;
