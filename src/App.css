@@ -3,12 +3,48 @@
   src: url(src/assets/fonts/DINCondensed.ttf);
 }
 
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 :root {
   background-color: #1C77A3FF;
   text-align: center;
 }
+.app-container > .loading-screen {
+  display: block;
+}
 
-.header-container {
+.app-container > .main-game-content {
+  display: none;
+}
+
+.app-container > div:not(.loading-screen) {
+  display: block;
+}
+
+.loading-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;  
+  height: 100vh;
+  width: 100vw;
+  position: fixed; 
+  top: 0;
+  left: 0;
+  background-color: #1C77A3FF;
+}
+
+.loading-image {
+  margin-top: 2rem;
+  width: 1000px;
+  height: auto;
+}
+
+.loading-header, .header-container {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -18,6 +54,11 @@
 .logo {
   width: 250px;
   filter: invert(100%);
+}
+
+.main-game-content {
+  height: 100vh;
+  width: 100vw;
 }
 
 h1 {
@@ -36,7 +77,6 @@ h2 {
   letter-spacing: -1px;
   margin: 0;
   color: #ffffff;
-
 }
 
 .scoreboard {
@@ -44,7 +84,6 @@ h2 {
   align-items: center;
   justify-content: center;
   gap: 10rem;
-
 }
 
 h3 {
@@ -66,7 +105,6 @@ h3 {
 
 .card {
   cursor: pointer;
-
   padding: 10px;
   text-align: center;
   transition: transform 0.2s;
